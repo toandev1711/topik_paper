@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô phỏng Giấy thi TOPIK</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>한국어능력시험 II (TOPIK II)</h1>
+            <p>문제 54번 답안지 / Answer Sheet - Question 54</p>
+            <p>25 ô × 28 dòng = 700 ô</p>
+        </div>
+        <div style="display: flex; justify-content: space-between; flex: 1;">
+        <div class="input-section">
+            <h3 style="margin-bottom: 15px;">📝 Nhập văn bản của bạn</h3>
+            <textarea id="inputText" placeholder="Nhập văn bản tiếng Hàn tại đây...&#10;&#10;Ví dụ: 요즘 사람들은 건강에 대한 관심이 높아지면서, 운동을 하는 사람들이 많아졌습니다." oninput="fillGrid()"></textarea>
+            
+            <div class="controls">
+              
+                <button class="btn-reset" onclick="resetAll()">↻ Làm mới tất cả</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Tổng số ký tự</div>
+                    <div class="stat-value" id="totalChars">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Số ô đã dùng</div>
+                    <div class="stat-value" id="usedCells">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Số dòng đã dùng</div>
+                    <div class="stat-value" id="usedLines">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Số ô còn lại</div>
+                    <div class="stat-value" id="remainingCells">700</div>
+                </div>
+            </div>
+
+            <div id="warningMsg"></div>
+        </div>
+
+        <div class="paper-section">
+           
+
+            <div id="writingPaper"></div>
+        </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
