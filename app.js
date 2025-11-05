@@ -223,62 +223,58 @@
 
         createGrid();
       async function saveAsPDF() {
-    const paper = document.getElementById('writingPaper');
-    if (!paper.querySelector('.filled')) {
-        window.alert(' PDF로 저장하기 전에 먼저 글을 입력하세요!');
-        return;
-    }
+        const paper = document.getElementById('writingPaper');
+        if (!paper.querySelector('.filled')) {
+            window.alert(' PDF로 저장하기 전에 먼저 글을 입력하세요!');
+            return;
+        }
 
-    const fileName = prompt('PDF 파일 이름을 입력하세요 (확장자 제외):', '쓰기_연습');
-    if (!fileName) {
-        showInfo('PDF 저장이 취소되었습니다.');
-        return;
-    }
+        const fileName = prompt('PDF 파일 이름을 입력하세요 (확장자 제외):', '쓰기_연습');
+        if (!fileName) {
+            showInfo('PDF 저장이 취소되었습니다.');
+            return;
+        }
 
-    showInfo('PDF 파일을 생성 중입니다. 잠시만 기다려 주세요...');
-    const tempContainer = document.createElement('div');
-    tempContainer.style.background = '#ffffff';
-    tempContainer.style.padding = '12px';
-    tempContainer.style.display = 'inline-block'; 
-    const titleEl = document.createElement('div');
-    titleEl.textContent = `작성글: ${fileName}`;
-    titleEl.style.textAlign = 'center';
-    titleEl.style.fontWeight = '700';
-    titleEl.style.fontSize = '16px';
-    titleEl.style.marginBottom = '8px';
-    titleEl.style.fontFamily = 'Nanum Gothic, "Noto Sans KR", "Malgun Gothic", sans-serif';
-    const paperClone = paper.cloneNode(true);
-    paperClone.style.transformOrigin = 'top left';
+        showInfo('PDF 파일을 생성 중입니다. 잠시만 기다려 주세요...');
+        const tempContainer = document.createElement('div');
+        tempContainer.style.background = '#ffffff';
+        tempContainer.style.padding = '12px';
+        tempContainer.style.display = 'inline-block'; 
+        const titleEl = document.createElement('div');
+        titleEl.textContent = `작성글: ${fileName}`;
+        titleEl.style.textAlign = 'center';
+        titleEl.style.fontWeight = '700';
+        titleEl.style.fontSize = '16px';
+        titleEl.style.marginBottom = '8px';
+        titleEl.style.fontFamily = 'Nanum Gothic, "Noto Sans KR", "Malgun Gothic", sans-serif';
+        const paperClone = paper.cloneNode(true);
+        paperClone.style.transformOrigin = 'top left';
 
-    tempContainer.appendChild(titleEl);
-    tempContainer.appendChild(paperClone);
-    tempContainer.style.position = 'fixed';
-    tempContainer.style.left = '50%';
-    tempContainer.style.paddingRight = '30px';
-    tempContainer.style.top = '-9999px';
-    document.body.appendChild(tempContainer);
+        tempContainer.appendChild(titleEl);
+        tempContainer.appendChild(paperClone);
+        tempContainer.style.position = 'fixed';
+        tempContainer.style.left = '50%';
+        tempContainer.style.paddingRight = '30px';
+        tempContainer.style.top = '-9999px';
+        document.body.appendChild(tempContainer);
 
-    const canvas = await html2canvas(tempContainer, {
-        scale: 2,
-        backgroundColor: "#ffffff",
-        useCORS: true
-    });
-    document.body.removeChild(tempContainer);
-
-    const imgData = canvas.toDataURL('image/png');
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pdfWidth * 0.82;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-    const marginX = (pdfWidth - imgWidth) / 2;
-    const startY = 20;
-
-    pdf.addImage(imgData, 'PNG', marginX, startY, imgWidth, imgHeight);
-
-    pdf.save(`${fileName}.pdf`);
-
-    showInfo(`"${fileName}.pdf" 파일이 성공적으로 저장되었습니다!`);
+        const canvas = await html2canvas(tempContainer, {
+            scale: 2,
+            backgroundColor: "#ffffff",
+            useCORS: true
+        });
+        document.body.removeChild(tempContainer);
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = pdfWidth * 0.82;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const marginX = (pdfWidth - imgWidth) / 2;
+        const startY = 20;
+        pdf.addImage(imgData, 'PNG', marginX, startY, imgWidth, imgHeight);
+        pdf.save(`${fileName}.pdf`);
+        showInfo(`"${fileName}.pdf" 파일이 성공적으로 저장되었습니다!`);
 }
 
