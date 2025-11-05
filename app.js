@@ -54,6 +54,9 @@
 
             for (let i = 0; i < text.length && cellIndex < TOTAL_CELLS; i++) {
                 const char = text[i];
+                if (/[.,!?;:~\-\)\]]/.test(char) && text[i + 1] === ' ') {
+                    i++; 
+                }
                 if (char === '\n') {
                     const currentCol = cellIndex % COLS;
                     if (currentCol !== 0) {
@@ -224,3 +227,31 @@
         }
 
         createGrid();
+        async function saveAsDocx() {
+    const text = document.getElementById('inputText').value.trim();
+    if (!text) {
+        showWarning('⚠️ Vui lòng nhập văn bản trước khi lưu!');
+        return;
+    }
+
+    const { Document, Packer, Paragraph, TextRun } = window.docx;
+    const paragraphs = text.split('\n').map(line =>
+        new Paragraph({
+            children: [new TextRun(line)],
+        })
+    );
+
+    const doc = new Document({
+        sections: [{
+            properties: {},
+            children: paragraphs,
+        }],
+    });
+    const blob = await Packer.toBlob(doc);
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'bai_viet.docx';
+    link.click();
+
+    showInfo('📄 File đã được lưu thành công!');
+}
