@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mô phỏng Giấy thi TOPIK</title>
+    <title>원고지 편집기</title>
+    <link
+  rel="icon"
+  href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>"
+>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.0.0/build/index.umd.js"></script>
@@ -11,35 +16,35 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>한국어능력시험 II (TOPIK II)</h1>
-            <p>문제 54번 답안지 / Answer Sheet - Question 54</p>
+            <h1>한국어능력시험 II</h1>
+            <p>문제 54번 답안지</p>
         </div>
         <div style="display: flex; justify-content: space-between; flex: 1;">
         <div class="input-section">
-            <h3 style="margin-bottom: 15px;">📝 Nhập văn bản của bạn</h3>
-            <textarea id="inputText" placeholder="Nhập văn bản tiếng Hàn tại đây...&#10;&#10;Ví dụ: 요즘 사람들은 건강에 대한 관심이 높아지면서, 운동을 하는 사람들이 많아졌습니다." oninput="fillGrid()"></textarea>
+            <h3 style="margin-bottom: 15px;">여기에서 문서를 입력하세요</h3>
+            <textarea id="inputText" placeholder="저는 토픽 6급을 받을 거예요....." oninput="fillGrid()"></textarea>
             
             <div class="controls">
-              
-                <button class="btn-reset" onclick="resetAll()">↻ Làm mới tất cả</button>
+              <button onclick="saveAsPDF()">PDF 파일로 저장</button>
 
+                <button class="btn-reset" onclick="resetAll()">모두 새로고침</button>
             </div>
 
             <div class="stats">
                 <div class="stat-item">
-                    <div class="stat-label">Tổng số ký tự</div>
+                    <div class="stat-label">총 글자 수</div>
                     <div class="stat-value" id="totalChars">0</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">Số ô đã dùng</div>
+                    <div class="stat-label">사용한 칸 수</div>
                     <div class="stat-value" id="usedCells">0</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">Số dòng đã dùng</div>
+                    <div class="stat-label">사용한 줄 수</div>
                     <div class="stat-value" id="usedLines">0</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">Số ô còn lại</div>
+                    <div class="stat-label">남은 칸 수</div>
                     <div class="stat-value" id="remainingCells">700</div>
                 </div>
             </div>
@@ -56,5 +61,10 @@
     </div>
 
     <script src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+
 </body>
 </html>

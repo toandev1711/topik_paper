@@ -43,11 +43,6 @@
             const text = document.getElementById('inputText').value;
             clearGrid();
 
-            if (!text.trim()) {
-                showWarning('Vui lòng nhập văn bản trước!');
-                return;
-            }
-
             let cellIndex = 0;
             let charCount = 0;
             let isStartOfParagraph = true;
@@ -178,11 +173,11 @@
             updateStats(charCount, cellIndex);
 
             if (cellIndex >= TOTAL_CELLS) {
-                showWarning('⚠️ Cảnh báo: Văn bản vượt quá số ô cho phép! Một số nội dung không được hiển thị.');
+                showWarning('경고: 글이 허용된 칸 수를 초과했습니다! 일부 내용이 표시되지 않았습니다.');
             } else if (cellIndex > 700) {
-                showWarning('⚠️ Chú ý: Bạn đã sử dụng hơn 700 ô (giới hạn đề nghị cho TOPIK).');
+                showWarning('주의: 이미 700칸 이상을 사용했습니다.');
             } else {
-                showInfo('✓ Văn bản đã được điền thành công vào giấy thi!');
+                showInfo('글이 시험지에 성공적으로 입력되었습니다');
             }
         }
 
@@ -227,31 +222,63 @@
         }
 
         createGrid();
-        async function saveAsDocx() {
-    const text = document.getElementById('inputText').value.trim();
-    if (!text) {
-        showWarning('⚠️ Vui lòng nhập văn bản trước khi lưu!');
+      async function saveAsPDF() {
+    const paper = document.getElementById('writingPaper');
+    if (!paper.querySelector('.filled')) {
+        window.alert(' PDF로 저장하기 전에 먼저 글을 입력하세요!');
         return;
     }
 
-    const { Document, Packer, Paragraph, TextRun } = window.docx;
-    const paragraphs = text.split('\n').map(line =>
-        new Paragraph({
-            children: [new TextRun(line)],
-        })
-    );
+    const fileName = prompt('PDF 파일 이름을 입력하세요 (확장자 제외):', '쓰기_연습');
+    if (!fileName) {
+        showInfo('PDF 저장이 취소되었습니다.');
+        return;
+    }
 
-    const doc = new Document({
-        sections: [{
-            properties: {},
-            children: paragraphs,
-        }],
+    showInfo('PDF 파일을 생성 중입니다. 잠시만 기다려 주세요...');
+    const tempContainer = document.createElement('div');
+    tempContainer.style.background = '#ffffff';
+    tempContainer.style.padding = '12px';
+    tempContainer.style.display = 'inline-block'; 
+    const titleEl = document.createElement('div');
+    titleEl.textContent = `작성글: ${fileName}`;
+    titleEl.style.textAlign = 'center';
+    titleEl.style.fontWeight = '700';
+    titleEl.style.fontSize = '16px';
+    titleEl.style.marginBottom = '8px';
+    titleEl.style.fontFamily = 'Nanum Gothic, "Noto Sans KR", "Malgun Gothic", sans-serif';
+    const paperClone = paper.cloneNode(true);
+    paperClone.style.transformOrigin = 'top left';
+
+    tempContainer.appendChild(titleEl);
+    tempContainer.appendChild(paperClone);
+    tempContainer.style.position = 'fixed';
+    tempContainer.style.left = '50%';
+    tempContainer.style.paddingRight = '30px';
+    tempContainer.style.top = '-9999px';
+    document.body.appendChild(tempContainer);
+
+    const canvas = await html2canvas(tempContainer, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true
     });
-    const blob = await Packer.toBlob(doc);
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'bai_viet.docx';
-    link.click();
+    document.body.removeChild(tempContainer);
 
-    showInfo('📄 File đã được lưu thành công!');
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = pdfWidth * 0.82;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const marginX = (pdfWidth - imgWidth) / 2;
+    const startY = 20;
+
+    pdf.addImage(imgData, 'PNG', marginX, startY, imgWidth, imgHeight);
+
+    pdf.save(`${fileName}.pdf`);
+
+    showInfo(`"${fileName}.pdf" 파일이 성공적으로 저장되었습니다!`);
 }
+
